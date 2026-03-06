@@ -673,7 +673,46 @@
                     ]
                 }
             ],
+
+            <!-- Organizations -->
+<div class="mt-24">
+    <h3 class="text-3xl font-bold mb-8 reveal">社团经历</h3>
+    <div class="space-y-8">
+        <div v-for="(org, index) in profileData.organizations" :key="index" 
+             class="bento-card glass-strong rounded-3xl p-8 reveal">
+            <!-- Header -->
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 pb-6 border-b border-ivory/10">
+                <div>
+                    <h4 class="text-2xl font-bold text-ivory">{{ org.name }}</h4>
+                    <p class="text-ivory/70 text-lg mt-1">{{ org.role }}</p>
+                </div>
+                <span class="text-acid/60 font-mono text-sm mt-2 md:mt-0 px-4 py-2 rounded-full bg-acid/5">{{ org.period }}</span>
+            </div>
             
+            <!-- Activities -->
+            <div class="space-y-8">
+                <div v-for="(activity, aIndex) in org.activities" :key="aIndex" class="relative">
+                    <div class="flex items-start gap-4">
+                        <div class="w-8 h-8 rounded-full bg-acid/10 flex items-center justify-center flex-shrink-0 mt-1">
+                            <i data-lucide="arrow-right" class="w-4 h-4 text-acid"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h5 class="text-lg font-semibold text-ivory mb-3">{{ activity.title }}</h5>
+                            <ul class="space-y-2">
+                                <li v-for="(highlight, hIndex) in activity.highlights" :key="hIndex"
+                                    class="text-ivory/60 text-sm flex items-start gap-2">
+                                    <span class="text-acid/60 mt-1">•</span>
+                                    {{ highlight }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+        
             // Skills
             coreSkills: [
                 "客户沟通与需求拆解",
