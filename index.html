@@ -673,12 +673,38 @@
                     ]
                 }
             ],
+
+organizations: [
+    {
+        name: "ESCP中国学联",
+        role: "市场营销负责人",
+        period: "2024.01 - 至今",
+        activities: [
+            {
+                title: "2025年 ESCP China × SPF 元宵节公益活动",
+                highlights: [
+                    "活动统筹：主导环保主题元宵活动策划与执行，联合SPF推动可回收灯笼DIY与公益汤圆体验",
+                    "模式创新：构建自主捐赠机制，实现文化活动与公益筹款融合",
+                    "成果转化：筹集善款200欧元并全额捐赠慈善机构，提升社群凝聚力与品牌社会责任形象"
+                ]
+            },
+            {
+                title: "2025年柏林中秋活动",
+                highlights: [
+                    "活动策划：策划并执行「月圆初聚」中秋主题活动，吸引40+校友报名参与，活动收入达500欧元",
+                    "内容传播：制作并发布微信公众号推文，阅读量500+，有效提升校友互动与活动影响力",
+                    "社群凝聚：围绕文化体验与交流设计活动环节，促进校友之间的互动与社区凝聚力"
+                ]
+            }
+        ]
+    }
+],
             
-<div class="mt-24 px-6 max-w-6xl mx-auto">
-    <h3 class="text-3xl font-bold mb-8 reveal">社团经历</h3>
-    <div class="space-y-8">
-        <div v-for="(org, index) in profileData.organizations" :key="index" 
-             class="glass-strong rounded-3xl p-8 reveal">
+ <div class="mt-24 px-6 max-w-6xl mx-auto">
+            <h3 class="text-3xl font-bold mb-8 reveal">社团经历</h3>
+            <div class="space-y-8">
+                <div v-for="(org, index) in profileData.organizations" :key="index" 
+                     class="glass-strong rounded-3xl p-8 reveal">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 pb-6 border-b border-ivory/10">
                 <div>
                     <h4 class="text-2xl font-bold text-ivory">{{ org.name }}</h4>
@@ -711,32 +737,6 @@
         </div>
     </div>
 </div>
-        
-organizations: [
-    {
-        name: "ESCP中国学联",
-        role: "市场营销负责人",
-        period: "2024.01 - 至今",
-        activities: [
-            {
-                title: "2025年 ESCP China × SPF 元宵节公益活动",
-                highlights: [
-                    "活动统筹：主导环保主题元宵活动策划与执行，联合SPF推动可回收灯笼DIY与公益汤圆体验",
-                    "模式创新：构建自主捐赠机制，实现文化活动与公益筹款融合",
-                    "成果转化：筹集善款200欧元并全额捐赠慈善机构，提升社群凝聚力与品牌社会责任形象"
-                ]
-            },
-            {
-                title: "2025年柏林中秋活动",
-                highlights: [
-                    "活动策划：策划并执行「月圆初聚」中秋主题活动，吸引40+校友报名参与，活动收入达500欧元",
-                    "内容传播：制作并发布微信公众号推文，阅读量500+，有效提升校友互动与活动影响力",
-                    "社群凝聚：围绕文化体验与交流设计活动环节，促进校友之间的互动与社区凝聚力"
-                ]
-            }
-        ]
-    }
-],
             
         
             // Skills
