@@ -674,34 +674,33 @@
                 }
             ],
             
-<!-- Organizations -->
-<div class="mt-24">
+<div class="mt-24 px-6 max-w-6xl mx-auto">
     <h3 class="text-3xl font-bold mb-8 reveal">社团经历</h3>
     <div class="space-y-8">
         <div v-for="(org, index) in profileData.organizations" :key="index" 
-             class="bento-card glass-strong rounded-3xl p-8 reveal">
-            <!-- Header -->
+             class="glass-strong rounded-3xl p-8 reveal">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 pb-6 border-b border-ivory/10">
                 <div>
                     <h4 class="text-2xl font-bold text-ivory">{{ org.name }}</h4>
                     <p class="text-ivory/70 text-lg mt-1">{{ org.role }}</p>
                 </div>
-                <span class="text-acid/60 font-mono text-sm mt-2 md:mt-0 px-4 py-2 rounded-full bg-acid/5">{{ org.period }}</span>
+                <span class="text-acid/60 font-mono text-sm mt-2 md:mt-0 px-4 py-2 rounded-full bg-acid/5 border border-acid/10">
+                    {{ org.period }}
+                </span>
             </div>
             
-            <!-- Activities -->
-            <div class="space-y-8">
+            <div class="grid md:grid-cols-2 gap-8">
                 <div v-for="(activity, aIndex) in org.activities" :key="aIndex" class="relative">
                     <div class="flex items-start gap-4">
                         <div class="w-8 h-8 rounded-full bg-acid/10 flex items-center justify-center flex-shrink-0 mt-1">
-                            <i data-lucide="arrow-right" class="w-4 h-4 text-acid"></i>
+                            <i data-lucide="chevron-right" class="w-4 h-4 text-acid"></i>
                         </div>
                         <div class="flex-1">
                             <h5 class="text-lg font-semibold text-ivory mb-3">{{ activity.title }}</h5>
-                            <ul class="space-y-2">
+                            <ul class="space-y-3">
                                 <li v-for="(highlight, hIndex) in activity.highlights" :key="hIndex"
-                                    class="text-ivory/60 text-sm flex items-start gap-2">
-                                    <span class="text-acid/60 mt-1">•</span>
+                                    class="text-ivory/60 text-sm flex items-start gap-2 leading-relaxed">
+                                    <span class="text-acid/60 mt-1.5 w-1.5 h-1.5 rounded-full bg-acid flex-shrink-0"></span>
                                     {{ highlight }}
                                 </li>
                             </ul>
@@ -730,7 +729,7 @@ organizations: [
             {
                 title: "2025年柏林中秋活动",
                 highlights: [
-                    "活动策划：策划并执行「月圆初聚」中秋主题活动，吸引40+校友报名参与，活动收入达500欧元（约4000元人民币）",
+                    "活动策划：策划并执行「月圆初聚」中秋主题活动，吸引40+校友报名参与，活动收入达500欧元",
                     "内容传播：制作并发布微信公众号推文，阅读量500+，有效提升校友互动与活动影响力",
                     "社群凝聚：围绕文化体验与交流设计活动环节，促进校友之间的互动与社区凝聚力"
                 ]
