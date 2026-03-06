@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>吴薇 | Wu Wei - Portfolio</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Vue 3 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'void': '#050505',
+                        'ivory': '#F0F0F0',
+                        'acid': '#CCFF00',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: #050505;
+            color: #F0F0F0;
+            font-family: 'Inter', system-ui, sans-serif;
+            overflow-x: hidden;
+            cursor: none;
+        }
+        
+        /* Custom Cursor */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #CCFF00;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transition: transform 0.1s ease;
+        }
+        
+        .cursor-dot {
+            width: 6px;
+            height: 6px;
+            background: #CCFF00;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+        }
+        
+        .cursor.hover {
+            transform: scale(2.5);
+            background: rgba(204, 255, 0, 0.1);
+        }
+        
+        /* Noise Texture Overlay */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+        
+        /* Glassmorphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .glass-strong {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Liquid Blob Animation */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: float 20s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(50px, -50px) scale(1.1); }
+            50% { transform: translate(-30px, 30px) scale(0.9); }
+            75% { transform: translate(40px, 20px) scale(1.05); }
+        }
+        
+        /* Marquee Animation */
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        
+        .marquee-track {
+            animation: marquee 30s linear infinite;
+        }
+        
+        .marquee-track:hover {
+            animation-play-state: paused;
+        }
+        
+        /* Timeline Styles */
+        .timeline-item {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .timeline-item:hover {
+            transform: translateX(10px);
+        }
+        
+        .timeline-item:hover .timeline-content {
+            opacity: 1;
+        }
+        
+        .timeline-item:not(:hover) {
+            opacity: 0.5;
+        }
+        
+        .timeline-container:hover .timeline-item:not(:hover) {
+            opacity: 0.3;
+        }
+        
+        /* Magnetic Button Effect */
+        .magnetic-btn {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Text Gradient */
+        .text-gradient {
+            background: linear-gradient(135deg, #F0F0F0 0%, #CCFF00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #050505;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(204, 255, 0, 0.3);
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(204, 255, 0, 0.5);
+        }
+        
+        /* Reveal Animation Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        /* Hero Text Animation */
+        .hero-char {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(100px) rotateX(-90deg);
+        }
+        
+        /* Bento Grid Hover */
+        .bento-card {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .bento-card:hover {
+            transform: scale(1.02);
+            border-color: rgba(204, 255, 0, 0.3);
+        }
+        
+        /* Skill Tag */
+        .skill-tag {
+            transition: all 0.3s ease;
+        }
+        
+        .skill-tag:hover {
+            background: rgba(204, 255, 0, 0.1);
+            border-color: #CCFF00;
+        }
+        
+        /* Footer CTA */
+        .cta-text {
+            font-size: clamp(3rem, 12vw, 10rem);
+            line-height: 0.9;
+            letter-spacing: -0.04em;
+        }
+        
+        /* Link Underline Animation */
+        .link-underline {
+            position: relative;
+        }
+        
+        .link-underline::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #CCFF00;
+            transition: width 0.3s ease;
+        }
+        
+        .link-underline:hover::after {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Custom Cursor -->
+        <div class="cursor" ref="cursor"></div>
+        <div class="cursor-dot" ref="cursorDot"></div>
+        
+        <!-- Noise Overlay -->
+        <div class="noise-overlay"></div>
+        
+        <!-- Background Blobs -->
+        <div class="blob w-96 h-96 bg-purple-900/30 top-0 left-0" style="animation-delay: 0s;"></div>
+        <div class="blob w-80 h-80 bg-blue-900/20 top-1/3 right-0" style="animation-delay: -5s;"></div>
+        <div class="blob w-72 h-72 bg-emerald-900/20 bottom-0 left-1/3" style="animation-delay: -10s;"></div>
+        
+        <!-- Navigation -->
+        <nav class="fixed top-0 left-0 w-full z-50 px-6 py-6 mix-blend-difference">
+            <div class="flex justify-between items-center">
+                <a href="#" class="text-ivory font-bold text-lg tracking-tight magnetic-btn" @mouseenter="cursorHover = true" @mouseleave="cursorHover = false">
+                    {{ profileData.name }}
+                </a>
+                <div class="flex gap-8 text-sm">
+                    <a href="#about" class="text-ivory/70 hover:text-ivory link-underline magnetic-btn" @mouseenter="cursorHover = true" @mouseleave="cursorHover = false">关于</a>
+                    <a href="#experience" class="text-ivory/70 hover:text-ivory link-underline magnetic-btn" @mouseenter="cursorHover = true" @mouseleave="cursorHover = false">经历</a>
+                    <a href="#skills" class="text-ivory/70 hover:text-ivory link-underline magnetic-btn" @mouseenter="cursorHover = true" @mouseleave="cursorHover = false">技能</a>
+                    <a href="#contact" class="text-ivory/70 hover:text-ivory link-underline magnetic-btn" @mouseenter="cursorHover = true" @mouseleave="cursorHover = false">联系</a>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Hero Section -->
+        <section class="min-h-screen flex items-center justify-center relative overflow-hidden px-6">
+            <div class="text-center z-10">
+                <div class="mb-6">
+                    <span class="text-acid/60 text-sm tracking-[0.3em] uppercase reveal">{{ profileData.role }}</span>
+                </div>
+                <h1 class="text-[clamp(4rem,15vw,12rem)] font-black tracking-tighter leading-none mb-8">
+                    <span v-for="(char, index) in profileData.name.split('')" 
+                          :key="index" 
+                          class="hero-char inline-block text-ivory"
+                          :style="{ animationDelay: `${index * 0.05}s` }">
+                        {{ char }}
+                    </span>
+                </h1>
+                <p class="text-ivory/50 text-lg max-w-xl mx-auto reveal" style="animation-delay: 0.5s;">
+                    {{ profileData.tagline }}
+                </p>
+                <div class="mt-12 flex justify-center gap-4 reveal" style="animation-delay: 0.7s;">
+                    <a :href="`mailto:${profileData.email}`" 
+                       class="glass px-8 py-4 rounded-full text-ivory hover:bg-ivory/10 transition-all magnetic-btn flex items-center gap-2"
+                       @mouseenter="cursorHover = true" @mouseleave="cursorHover = false">
+                        <i data-lucide="mail" class="w-4 h-4"></i>
+                        联系我
+                    </a>
+                    <a href="#about" 
+                       class="border border-ivory/20 px-8 py-4 rounded-full text-ivory/70 hover:border-ivory/50 hover:text-ivory transition-all magnetic-btn"
+                       @mouseenter="cursorHover = true" @mouseleave="cursorHover = false">
+                        了解更多
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Scroll Indicator -->
+            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50">
+                <span class="text-xs tracking-widest uppercase">Scroll</span>
+                <div class="w-px h-12 bg-gradient-to-b from-ivory/50 to-transparent"></div>
+            </div>
+        </section>
+        
+        <!-- About Section - Bento Grid -->
+        <section id="about" class="py-32 px-6 relative">
+            <div class="max-w-7xl mx-auto">
+                <div class="mb-16">
+                    <span class="text-acid/60 text-sm tracking-[0.3em] uppercase reveal">About</span>
+                    <h2 class="text-5xl md:text-7xl font-bold mt-4 reveal">关于我</h2>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Bio Card -->
+                    <div class="bento-card glass rounded-3xl p-8 md:col-span-2 reveal">
+                        <div class="flex items-start gap-4 mb-6">
+                            <div class="w-12 h-12 rounded-full bg-acid/10 flex items-center justify-center">
+                                <i data-lucide="user" class="w-6 h-6 text-acid"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-ivory">个人简介</h3>
+                                <p class="text-ivory/50 text-sm">Bio</p>
+                            </div>
+                        </div>
+                        <p class="text-ivory/70 leading-relaxed text-lg">
+                            {{ profileData.bio }}
+                        </p>
+                    </div>
+                    
+                    <!-- Experience Years -->
+                    <div class="bento-card glass rounded-3xl p-8 reveal">
+                        <div class="flex items-start gap-4 mb-6">
+                            <div class="w-12 h-12 rounded-full bg-acid/10 flex items-center justify-center">
+                                <i data-lucide="briefcase" class="w-6 h-6 text-acid"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-ivory">经验年限</h3>
+                                <p class="text-ivory/50 text-sm">Experience</p>
+                            </div>
+                        </div>
+                        <div class="text-6xl font-black text-gradient">{{ profileData.experienceYears }}+</div>
+                        <p class="text-ivory/50 mt-2">年实习与项目经验</p>
+                    </div>
+                    
+                    <!-- Location -->
+                    <div class="bento-card glass rounded-3xl p-8 reveal">
+                        <div class="flex items-start gap-4 mb-6">
+                            <div class="w-12 h-12 rounded-full bg-acid/10 flex items-center justify-center">
+                                <i data-lucide="map-pin" class="w-6 h-6 text-acid"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-ivory">所在城市</h3>
+                                <p class="text-ivory/50 text-sm">Location</p>
+                            </div>
+                        </div>
+                        <div class="text-2xl font-semibold text-ivory">{{ profileData.location }}</div>
+                        <p class="text-ivory/50 mt-2">ESCP 欧洲商学院在读</p>
+                    </div>
+                    
+                    <!-- Education -->
+                    <div class="bento-card glass rounded-3xl p-8 md:col-span-2 reveal">
+                        <div class="flex items-start gap-4 mb-6">
+                            <div class="w-12 h-12 rounded-full bg-acid/10 flex items-center justify-center">
+                                <i data-lucide="graduation-cap" class="w-6 h-6 text-acid"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-ivory">教育背景</h3>
+                                <p class="text-ivory/50 text-sm">Education</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                            <div>
+                                <div class="text-xl font-semibold text-ivory">{{ profileData.education.school }}</div>
+                                <div class="text-ivory/70">{{ profileData.education.major }}</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-acid font-mono">GPA {{ profileData.education.gpa }}</div>
+                                <div class="text-ivory/50 text-sm">{{ profileData.education.period }}</div>
+                            </div>
+                        </div>
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <span v-for="course in profileData.education.courses" :key="course" 
+                                  class="px-3 py-1 rounded-full bg-ivory/5 text-ivory/60 text-sm">
+                                {{ course }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Experience Section - Timeline -->
+        <section id="experience" class="py-32 px-6 relative">
+            <div class="max-w-5xl mx-auto">
+                <div class="mb-16">
+                    <span class="text-acid/60 text-sm tracking-[0.3em] uppercase reveal">Experience</span>
+                    <h2 class="text-5xl md:text-7xl font-bold mt-4 reveal">工作经历</h2>
+                </div>
+                
+                <div class="timeline-container space-y-8">
+                    <div v-for="(exp, index) in profileData.experiences" :key="index" 
+                         class="timeline-item relative pl-8 md:pl-0 reveal">
+                        <!-- Timeline Line -->
+                        <div class="absolute left-0 top-0 bottom-0 w-px bg-ivory/10 md:left-1/3">
+                            <div class="absolute top-2 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-acid"></div>
+                        </div>
+                        
+                        <div class="md:grid md:grid-cols-3 md:gap-8">
+                            <!-- Date -->
+                            <div class="md:text-right mb-2 md:mb-0">
+                                <span class="text-acid/60 font-mono text-sm">{{ exp.period }}</span>
+                            </div>
+                            
+                            <!-- Content -->
+                            <div class="md:col-span-2 timeline-content">
+                                <div class="glass-strong rounded-2xl p-6">
+                                    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                                        <div>
+                                            <h3 class="text-xl font-semibold text-ivory">{{ exp.title }}</h3>
+                                            <p class="text-ivory/70">{{ exp.company }}</p>
+                                        </div>
+                                    </div>
+                                    <ul class="space-y-2">
+                                        <li v-for="(desc, dIndex) in exp.descriptions" :key="dIndex" 
+                                            class="text-ivory/60 text-sm flex items-start gap-2">
+                                            <span class="text-acid mt-1">•</span>
+                                            {{ desc }}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Projects -->
+                <div class="mt-24">
+                    <h3 class="text-3xl font-bold mb-8 reveal">项目经历</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div v-for="(project, index) in profileData.projects" :key="index" 
+                             class="bento-card glass rounded-2xl p-6 reveal">
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="text-acid/60 font-mono text-xs">{{ project.period }}</span>
+                                <span class="px-2 py-1 rounded-full bg-acid/10 text-acid text-xs">{{ project.type }}</span>
+                            </div>
+                            <h4 class="text-lg font-semibold text-ivory mb-2">{{ project.name }}</h4>
+                            <p class="text-ivory/60 text-sm mb-4">{{ project.role }}</p>
+                            <ul class="space-y-1">
+                                <li v-for="(highlight, hIndex) in project.highlights.slice(0, 2)" :key="hIndex"
+                                    class="text-ivory/50 text-xs flex items-start gap-2">
+                                    <span class="text-acid/60">→</span>
+                                    {{ highlight }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Skills Section - Marquee -->
+        <section id="skills" class="py-32 relative overflow-hidden">
+            <div class="max-w-7xl mx-auto px-6 mb-16">
+                <span class="text-acid/60 text-sm tracking-[0.3em] uppercase reveal">Skills</span>
+                <h2 class="text-5xl md:text-7xl font-bold mt-4 reveal">技能专长</h2>
+            </div>
+            
+            <!-- Core Skills Marquee -->
+            <div class="mb-12 overflow-hidden">
+                <div class="marquee-track flex gap-6 whitespace-nowrap">
+                    <div v-for="skill in [...profileData.coreSkills, ...profileData.coreSkills]" :key="skill"
+                         class="skill-tag glass px-8 py-4 rounded-full text-ivory text-xl font-medium border border-ivory/10 flex-shrink-0">
+                        {{ skill }}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tools Marquee (Reverse Direction) -->
+            <div class="overflow-hidden">
+                <div class="marquee-track flex gap-6 whitespace-nowrap" style="animation-direction: reverse; animation-duration: 25s;">
+                    <div v-for="tool in [...profileData.tools, ...profileData.tools]" :key="tool"
+                         class="skill-tag glass px-6 py-3 rounded-full text-ivory/70 text-lg border border-ivory/10 flex-shrink-0">
+                        {{ tool }}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Languages -->
+            <div class="max-w-7xl mx-auto px-6 mt-16">
+                <h3 class="text-xl font-semibold mb-6 reveal">语言能力</h3>
+                <div class="flex flex-wrap gap-4">
+                    <div v-for="lang in profileData.languages" :key="lang.name" 
+                         class="glass px-6 py-4 rounded-2xl reveal">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="languages" class="w-5 h-5 text-acid"></i>
+                            <div>
+                                <div class="text-ivory font-medium">{{ lang.name }}</div>
+                                <div class="text-ivory/50 text-sm">{{ lang.level }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Footer - Contact CTA -->
+        <section id="contact" class="min-h-[70vh] flex flex-col justify-center items-center relative px-6 py-32">
+            <div class="text-center z-10 max-w-5xl mx-auto">
+                <span class="text-acid/60 text-sm tracking-[0.3em] uppercase reveal">Contact</span>
+                <h2 class="cta-text font-black text-ivory mt-8 mb-12 reveal">
+                    让我们<br><span class="text-gradient">开始合作</span>
+                </h2>
+                
+                <div class="flex flex-col md:flex-row justify-center items-center gap-8 mb-16 reveal">
+                    <a :href="`mailto:${profileData.email}`" 
+                       class="glass-strong px-10 py-5 rounded-full text-ivory hover:bg-acid hover:text-void transition-all magnetic-btn flex items-center gap-3 text-lg"
+                       @mouseenter="cursorHover = true" @mouseleave="cursorHover = false">
+                        <i data-lucide="mail" class="w-5 h-5"></i>
+                        {{ profileData.email }}
+                    </a>
+                    <a :href="`tel:${profileData.phone}`" 
+                       class="border border-ivory/20 px-10 py-5 rounded-full text-ivory/70 hover:border-ivory/50 hover:text-ivory transition-all magnetic-btn flex items-center gap-3"
+                       @mouseenter="cursorHover = true" @mouseleave="cursorHover = false">
+                        <i data-lucide="phone" class="w-5 h-5"></i>
+                        {{ profileData.phone }}
+                    </a>
+                </div>
+                
+                <!-- Social Links -->
+                <div class="flex justify-center gap-6 reveal">
+                    <a v-for="social in profileData.socials" :key="social.name"
+                       :href="social.url"
+                       target="_blank"
+                       class="w-14 h-14 rounded-full glass flex items-center justify-center text-ivory/70 hover:text-acid hover:border-acid/30 transition-all magnetic-btn"
+                       @mouseenter="cursorHover = true" @mouseleave="cursorHover = false">
+                        <i :data-lucide="social.icon" class="w-5 h-5"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Footer Bottom -->
+            <div class="absolute bottom-0 left-0 w-full px-6 py-8">
+                <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+                    <p class="text-ivory/30 text-sm">
+                        © 2025 {{ profileData.name }}. All rights reserved.
+                    </p>
+                    <p class="text-ivory/30 text-sm">
+                        Designed with <span class="text-acid">♥</span> by AI
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // ============================================
+        // PROFILE DATA - Easy Configuration
+        // ============================================
+        const profileData = {
+            // Basic Info
+            name: "吴薇",
+            nameEn: "Wu Wei",
+            role: "Sales / BD / Operations",
+            tagline: "具备跨文化沟通与商业分析能力，能够在多方协作中推进项目落地",
+            
+            // Contact
+            email: "weiwu8896@gmail.com",
+            phone: "18122358799",
+            location: "广州 / 欧洲",
+            
+            // About
+            bio: "ESCP欧洲商学院管理学专业在读学生，拥有丰富的跨文化项目经验。曾在广州国际交流合作中心、大华会计师事务所、引力传媒等知名企业实习，参与过意大利非营利机构咨询、结构化再保险方案设计、欧莱雅全球创新大赛等多元化项目。擅长客户沟通、需求拆解、方案转化与商务汇报，具备出色的数据复盘能力与多语言能力。",
+            experienceYears: "2",
+            
+            // Education
+            education: {
+                school: "ESCP Business School",
+                major: "Management 管理学",
+                period: "2023.09 - 2026.07",
+                gpa: "3.6/4.0",
+                courses: ["市场营销", "大数据分析", "会计", "统计"],
+                locations: ["法国", "意大利", "德国"]
+            },
+            
+            // Experiences
+            experiences: [
+                {
+                    title: "商务媒介实习生",
+                    company: "引力传媒股份有限公司",
+                    period: "2025.05 - 2025.08",
+                    descriptions: [
+                        "基于品牌客户需求跨平台累计提报500+位达人资源，完成初筛与匹配",
+                        "落地10+达人营销项目，统筹内容、样机与发布时间，保障多项目并行交付",
+                        "独立整理分析达人投放数据，完成10+项目复盘与结案汇报",
+                        "参与美的×《朋友请吃饭》第三季综艺内容植入项目执行"
+                    ]
+                },
+                {
+                    title: "项目助理实习生",
+                    company: "广州国际交流合作中心",
+                    period: "2024.06 - 2024.08",
+                    descriptions: [
+                        "参与6场中外交流合作活动的对外沟通与执行协调",
+                        "对接多个中外合作机构及嘉宾，累计服务500+活动参与者",
+                        "输出10+份活动资料与对外沟通材料，剪辑2场活动视频"
+                    ]
+                },
+                {
+                    title: "审计师助理实习生",
+                    company: "大华会计师事务所（广州分所）",
+                    period: "2024.05 - 2024.06",
+                    descriptions: [
+                        "协助审计项目进行财务资料整理、凭证核对与文档归档",
+                        "理解企业财务报表基本构成及审计工作逻辑",
+                        "提升对商业数据与流程规范的理解"
+                    ]
+                }
+            ],
+            
+            // Projects
+            projects: [
+                {
+                    name: "IterCulture 项目咨询",
+                    type: "意大利",
+                    role: "团队成员",
+                    period: "2024.10 - 2025.04",
+                    highlights: [
+                        "分析非营利机构资金结构与转化瓶颈",
+                        "设计众筹、产品化与赞助沟通方案",
+                        "项目成果对应€4,000-6,000众筹目标"
+                    ]
+                },
+                {
+                    name: "碳风险机构(CRI) 结构化再保险",
+                    type: "咨询项目",
+                    role: "项目成员",
+                    period: "2025.12 - 至今",
+                    highlights: [
+                        "参与设计结构化投资组合信用保护方案",
+                        "参与机构级Pitch Deck制作与方案表达"
+                    ]
+                },
+                {
+                    name: "L'Oréal Brandstorm 2025",
+                    type: "全球创新大赛",
+                    role: "团队成员",
+                    period: "2025.02 - 2025.04",
+                    highlights: [
+                        "设计Vapora三合一设备及模块化护肤Pod体系",
+                        "构建产品核心传播语与使用场景",
+                        "通过3分钟商业路演对外清晰呈现产品定位"
+                    ]
+                }
+            ],
+            
+            // Skills
+            coreSkills: [
+                "客户沟通与需求拆解",
+                "方案转化",
+                "商务沟通与汇报",
+                "数据复盘",
+                "跨文化协作",
+                "项目管理",
+                "商业分析",
+                "资源整合"
+            ],
+            
+            tools: [
+                "Excel",
+                "PowerPoint",
+                "Python",
+                "秀米",
+                "剪映",
+                "数据分析",
+                "市场调研",
+                "商务谈判"
+            ],
+            
+            // Languages
+            languages: [
+                { name: "普通话", level: "母语" },
+                { name: "粤语", level: "母语" },
+                { name: "英语", level: "雅思 7.0" },
+                { name: "法语", level: "A2 初级" },
+                { name: "意大利语", level: "A1 初级" },
+                { name: "德语", level: "A1 初级" }
+            ],
+            
+            // Social Links
+            socials: [
+                { name: "LinkedIn", icon: "linkedin", url: "#" },
+                { name: "Email", icon: "mail", url: "mailto:weiwu8896@gmail.com" },
+                { name: "Phone", icon: "phone", url: "tel:18122358799" }
+            ]
+        };
+
+        // ============================================
+        // VUE APP
+        // ============================================
+        const { createApp, ref, onMounted, onUnmounted } = Vue;
+        
+        createApp({
+            setup() {
+                const cursor = ref(null);
+                const cursorDot = ref(null);
+                const cursorHover = ref(false);
+                
+                // Mouse tracking
+                const handleMouseMove = (e) => {
+                    if (cursor.value && cursorDot.value) {
+                        gsap.to(cursor.value, {
+                            x: e.clientX - 10,
+                            y: e.clientY - 10,
+                            duration: 0.1,
+                            ease: "power2.out"
+                        });
+                        gsap.to(cursorDot.value, {
+                            x: e.clientX - 3,
+                            y: e.clientY - 3,
+                            duration: 0.05,
+                            ease: "power2.out"
+                        });
+                    }
+                };
+                
+                // Magnetic button effect
+                const handleMagneticMove = (e) => {
+                    const btn = e.currentTarget;
+                    const rect = btn.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width / 2;
+                    const y = e.clientY - rect.top - rect.height / 2;
+                    
+                    gsap.to(btn, {
+                        x: x * 0.3,
+                        y: y * 0.3,
+                        duration: 0.3,
+                        ease: "power2.out"
+                    });
+                };
+                
+                const handleMagneticLeave = (e) => {
+                    gsap.to(e.currentTarget, {
+                        x: 0,
+                        y: 0,
+                        duration: 0.3,
+                        ease: "power2.out"
+                    });
+                };
+                
+                onMounted(() => {
+                    // Initialize Lucide icons
+                    lucide.createIcons();
+                    
+                    // Mouse tracking
+                    document.addEventListener('mousemove', handleMouseMove);
+                    
+                    // Magnetic buttons
+                    document.querySelectorAll('.magnetic-btn').forEach(btn => {
+                        btn.addEventListener('mousemove', handleMagneticMove);
+                        btn.addEventListener('mouseleave', handleMagneticLeave);
+                    });
+                    
+                    // Cursor hover effect
+                    document.querySelectorAll('a, button, .magnetic-btn').forEach(el => {
+                        el.addEventListener('mouseenter', () => {
+                            cursor.value?.classList.add('hover');
+                        });
+                        el.addEventListener('mouseleave', () => {
+                            cursor.value?.classList.remove('hover');
+                        });
+                    });
+                    
+                    // GSAP Animations
+                    gsap.registerPlugin(ScrollTrigger);
+                    
+                    // Hero character animation
+                    gsap.to('.hero-char', {
+                        opacity: 1,
+                        y: 0,
+                        rotateX: 0,
+                        duration: 1.2,
+                        stagger: 0.05,
+                        ease: "expo.out",
+                        delay: 0.3
+                    });
+                    
+                    // Reveal animations
+                    gsap.utils.toArray('.reveal').forEach((el, i) => {
+                        gsap.to(el, {
+                            opacity: 1,
+                            y: 0,
+                            duration: 0.8,
+                            ease: "power3.out",
+                            scrollTrigger: {
+                                trigger: el,
+                                start: "top 85%",
+                                toggleActions: "play none none none"
+                            },
+                            delay: i * 0.05
+                        });
+                    });
+                    
+                    // Parallax for blobs
+                    gsap.utils.toArray('.blob').forEach((blob, i) => {
+                        gsap.to(blob, {
+                            y: 100 * (i % 2 === 0 ? 1 : -1),
+                            scrollTrigger: {
+                                trigger: "body",
+                                start: "top top",
+                                end: "bottom bottom",
+                                scrub: 1
+                            }
+                        });
+                    });
+                });
+                
+                onUnmounted(() => {
+                    document.removeEventListener('mousemove', handleMouseMove);
+                });
+                
+                return {
+                    profileData,
+                    cursor,
+                    cursorDot,
+                    cursorHover
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
